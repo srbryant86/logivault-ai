@@ -32,3 +32,7 @@ async def claude_handler(request: Request):
         result = response.json()
 
     return {"reply": result.get("content", [{}])[0].get("text", "Error")}
+
+@app.get("/")
+def root():
+    return {"message": "Claude backend is online"}
