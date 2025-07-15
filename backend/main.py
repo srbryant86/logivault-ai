@@ -22,17 +22,13 @@ async def claude_handler(request: Request):
     payload = {
         "model": "claude-3-opus-20240229",
         "max_tokens": 300,
-        "temperature": 0.7,
-        "system": "You are a helpful assistant.",
-        "messages": [{"role": "user", "content": prompt}]
+        "messages": [
+            {"role": "user", "content": prompt}
+        ]
     }
 
     async with httpx.AsyncClient() as client:
-        response = await client.post(
-            "https://api.anthropic.com/v1/messages",
-            json=payload,
-            headers=headers
-        )
+        response = await client.post("https://api.anthropic.com/v1/messages", headers=headers, json=payload)
+        result = response.json()
 
-    result = response.json()
-    return {"reply": result.get("content", [{}])[0].get("text", "No response")}
+    return {"reply": result.get("content", [{}])[0].get("text", "Error")}
