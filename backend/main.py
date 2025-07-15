@@ -8,6 +8,7 @@ app = FastAPI()
 
 CLAUDE_API_KEY = os.getenv("CLAUDE_API_KEY")
 
+
 @app.post("/claude")
 async def claude_handler(request: Request):
     data = await request.json()
@@ -28,11 +29,16 @@ async def claude_handler(request: Request):
     }
 
     async with httpx.AsyncClient() as client:
-        response = await client.post("https://api.anthropic.com/v1/messages", headers=headers, json=payload)
+        response = await client.post(
+            "https://api.anthropic.com/v1/messages",
+            headers=headers,
+            json=payload
+        )
         result = response.json()
 
     return {"reply": result.get("content", [{}])[0].get("text", "Error")}
 
+
 @app.get("/")
 def root():
-    return {"message": "Claude backend is online"}
+    return {"message": "Claude API is live"}
