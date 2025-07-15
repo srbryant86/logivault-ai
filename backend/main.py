@@ -8,15 +8,11 @@ app = FastAPI()
 
 CLAUDE_API_KEY = os.getenv("CLAUDE_API_KEY")
 
-@app.get("/")
-def read_root():
-    return {"message": "Logivault Base is Live with Claude!"}
-
 @app.post("/claude")
 async def claude_handler(request: Request):
     data = await request.json()
     prompt = data.get("prompt", "")
-    
+
     headers = {
         "x-api-key": CLAUDE_API_KEY,
         "anthropic-version": "2023-06-01",
@@ -39,4 +35,4 @@ async def claude_handler(request: Request):
         )
 
     result = response.json()
-    return {"reply": result["content"][0]["text"]}
+    return {"reply": result.get("content", [{}])[0].get("text", "No response")}
