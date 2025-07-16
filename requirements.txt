@@ -1,21 +1,4 @@
-# LogiVault AI - Render Optimized Dependencies
-# Core FastAPI stack
 fastapi==0.104.1
-uvicorn[standard]==0.24.0
-
-# AI/ML dependencies
+uvicorn==0.24.0
 anthropic==0.7.8
-
-# Web framework dependencies
 python-multipart==0.0.6
-pydantic==2.5.0
-python-dotenv==1.0.0
-
-# HTTP and async support
-requests==2.31.0
-aiofiles==23.2.1
-httpx==0.25.2
-
-# Build tools (helps with Render deployment)
-setuptools>=65.0.0
-wheel>=0.38.0
