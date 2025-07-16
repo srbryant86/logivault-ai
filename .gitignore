@@ -6,15 +6,25 @@ __pycache__/
 .env
 *.egg-info
 *.log
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
 
 # 🎨 Frontend (React / Vercel)
 node_modules/
 .next/
 build/
 dist/
+coverage/
 
 # 🖥️ Editors and OS
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
+
+# 🔧 Development Tools
+.mypy_cache/
+.black
+.isort.cfg
