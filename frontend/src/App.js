@@ -8,6 +8,7 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!prompt.trim()) return;
 
     setLoading(true);
     try {
@@ -50,6 +51,7 @@ function App() {
                 className="prompt-input"
                 disabled={loading}
               />
+              <button type="submit" disabled={loading || !prompt.trim()}>
                 {loading ? 'Sending...' : 'Send'}
               </button>
             </div>
