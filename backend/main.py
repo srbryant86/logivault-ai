@@ -75,3 +75,7 @@ def root():
 @app.get("/status")
 def status():
     return {"message": "Claude API is live"}
+
+@app.get("/healthz")
+def healthcheck():
+    return {"status": "ok"}
