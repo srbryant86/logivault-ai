@@ -2,15 +2,29 @@ from fastapi import FastAPI, Request
 import os
 import httpx
 import logging
+from logging.handlers import RotatingFileHandler
 from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
 
-# Initialize app and logging
+# Initialize app
 app = FastAPI()
-logging.basicConfig(level=logging.INFO)
+
+# Logging Setup
+log_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+log_file = "claude.log"
+
+file_handler = RotatingFileHandler(log_file, maxBytes=1_000_000, backupCount=5)
+file_handler.setFormatter(log_formatter)
+
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(log_formatter)
+
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+logger.addHandler(file_handler)
+logger.addHandler(console_handler)
 
 # Load Claude API key
 CLAUDE_API_KEY = os.getenv("CLAUDE_API_KEY")
