@@ -4,6 +4,7 @@ import httpx
 import logging
 from logging.handlers import RotatingFileHandler
 from dotenv import load_dotenv
+import asyncio
 
 # Load environment variables
 load_dotenv()
@@ -49,24 +50,30 @@ async def claude_handler(request: Request):
         ]
     }
 
-    try:
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
-                "https://api.anthropic.com/v1/messages",
-                headers=headers,
-                json=payload
-            )
-            response.raise_for_status()
-            result = response.json()
-            logger.info(f"Claude response: {result}")
-    except httpx.HTTPStatusError as e:
-        logger.error(f"HTTP error from Claude: {e.response.text}")
-        return {"error": e.response.text}
-    except Exception as e:
-        logger.exception("Unexpected error calling Claude API")
-        return {"error": "Internal server error"}
+    url = "https://api.anthropic.com/v1/messages"
+    retries = 3
+    backoff = 1
 
-    return {"reply": result.get("content", [{}])[0].get("text", "Error")}
+    for attempt in range(retries):
+        try:
+            async with httpx.AsyncClient() as client:
+                response = await client.post(url, headers=headers, json=payload)
+                response.raise_for_status()
+                result = response.json()
+                logger.info(f"Claude response: {result}")
+                return {"reply": result.get("content", [{}])[0].get("text", "Error")}
+        except httpx.HTTPStatusError as e:
+            logger.warning(f"[Attempt {attempt+1}] Claude HTTP error: {e.response.text}")
+        except Exception as e:
+            logger.warning(f"[Attempt {attempt+1}] General error: {str(e)}")
+
+        if attempt < retries - 1:
+            logger.info(f"Retrying in {backoff}s...")
+            await asyncio.sleep(backoff)
+            backoff *= 2
+
+    logger.error("Claude API failed after all retry attempts.")
+    return {"error": "Claude API unreachable or failed repeatedly"}
 
 @app.get("/")
 def root():
