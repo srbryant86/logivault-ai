@@ -4,6 +4,7 @@ from datetime import datetime
 
 LOG_FILE = "data/sessions.json"  # Create this folder if needed
 
+
 def log_session(data: dict):
     entry = {
         "timestamp": datetime.utcnow().isoformat(),
@@ -13,7 +14,7 @@ def log_session(data: dict):
         "metrics": data.get("metrics"),
         "contentType": data.get("contentType", "Generic"),
         "retryCount": data.get("retryCount", 0),
-        "userId": data.get("userId", "anon")
+        "userId": data.get("userId", "anon"),
     }
 
     os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True)

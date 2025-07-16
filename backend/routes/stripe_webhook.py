@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Request, Header
-import stripe
 import os
+
+import stripe
+from fastapi import APIRouter, Header, Request
 
 router = APIRouter()
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
@@ -8,6 +9,7 @@ endpoint_secret = os.getenv("STRIPE_WEBHOOK_SECRET")
 
 # Store user plan data — swap with real DB later
 user_plans = {}
+
 
 @router.post("/api/stripe/webhook")
 async def stripe_webhook(request: Request, stripe_signature: str = Header(None)):
@@ -17,7 +19,7 @@ async def stripe_webhook(request: Request, stripe_signature: str = Header(None))
             payload, stripe_signature, endpoint_secret
         )
     except stripe.error.SignatureVerificationError:
-        return { "status": "invalid signature" }
+        return {"status": "invalid signature"}
 
     if event["type"] == "customer.subscription.updated":
         sub = event["data"]["object"]
@@ -25,5 +27,5 @@ async def stripe_webhook(request: Request, stripe_signature: str = Header(None))
         plan = sub["items"]["data"][0]["price"]["nickname"]  # "Free", "Pro", etc.
         user_plans[user_id] = plan
         print(f"✅ Stripe plan updated for {user_id}: {plan}")
-    
-    return { "status": "ok" }
+
+    return {"status": "ok"}

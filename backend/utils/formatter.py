@@ -1,5 +1,6 @@
 import re
 
+
 def format_editorial(text: str) -> str:
     # Normalize whitespace
     text = re.sub(r"\s+", " ", text.strip())

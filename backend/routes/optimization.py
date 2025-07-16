@@ -9,5 +9,5 @@ async def optimize_content(request: Request):
     return {
         "optimizedText": optimized_text,
         "metrics": metrics,
-        "timestamp": datetime.utcnow().isoformat()
+        "timestamp": datetime.utcnow().isoformat(),
     }

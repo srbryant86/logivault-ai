@@ -3,3 +3,9 @@ fastapi-cors
 uvicorn
 httpx
 python-dotenv
+pytest
+pytest-asyncio
+pytest-cov
+black
+isort
+flake8

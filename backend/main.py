@@ -1,7 +1,9 @@
-from fastapi import FastAPI, Request, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from backend.claude_api import call_claude
 import os
+
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+
+from backend.claude_api import call_claude
 
 app = FastAPI()
 
@@ -12,16 +14,18 @@ app.add_middleware(
         "https://logivault-ai.vercel.app",
         "https://logivault-ai-*.vercel.app",
         "http://localhost:3000",
-        "http://127.0.0.1:3000"
+        "http://127.0.0.1:3000",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+
 @app.get("/healthz")
 def healthz():
     return {"status": "ok"}
+
 
 @app.post("/claude")
 async def claude(request: Request):
@@ -33,6 +37,7 @@ async def claude(request: Request):
     if response.startswith("Error:"):
         raise HTTPException(status_code=500, detail=response)
     return {"response": response}
+
 
 @app.post("/generate")
 async def generate(request: Request):

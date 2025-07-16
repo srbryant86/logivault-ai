@@ -1,10 +1,12 @@
-import httpx
 import os
+
+import httpx
 from dotenv import load_dotenv
 
 load_dotenv()
 
 CLAUDE_API_KEY = os.getenv("CLAUDE_API_KEY")
+
 
 async def call_claude(prompt: str) -> str:
     if not CLAUDE_API_KEY:
@@ -14,13 +16,13 @@ async def call_claude(prompt: str) -> str:
     headers = {
         "x-api-key": CLAUDE_API_KEY,
         "anthropic-version": "2023-06-01",
-        "content-type": "application/json"
+        "content-type": "application/json",
     }
     payload = {
         "model": "claude-3-opus-20240229",
         "max_tokens": 512,
         "temperature": 0.7,
-        "messages": [{"role": "user", "content": prompt}]
+        "messages": [{"role": "user", "content": prompt}],
     }
 
     async with httpx.AsyncClient() as client:
