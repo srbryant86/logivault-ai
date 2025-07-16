@@ -1,10 +1,10 @@
-from fastapi import FastAPI, Request, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, Request
 from backend.claude_api import call_claude
 import os
 
 app = FastAPI()
 
+<<<<<<< HEAD
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -21,6 +21,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+=======
+>>>>>>> 919e917761a526ae56f2f900d0c0f81616ec577b
 @app.get("/healthz")
 def healthz():
     return {"status": "ok"}
@@ -30,21 +32,6 @@ async def claude(request: Request):
     body = await request.json()
     prompt = body.get("prompt", "")
     if not prompt:
-        raise HTTPException(status_code=400, detail="No prompt provided.")
+        return {"error": "No prompt provided."}
     response = await call_claude(prompt)
-    if response.startswith("Error:"):
-        raise HTTPException(status_code=500, detail=response)
     return {"response": response}
-
-@app.post("/generate")
-async def generate(request: Request):
-    """Generate endpoint that matches frontend expectations"""
-    body = await request.json()
-    prompt = body.get("prompt", "")
-    if not prompt:
-        raise HTTPException(status_code=400, detail="No prompt provided.")
-    response = await call_claude(prompt)
-    if response.startswith("Error:"):
-        raise HTTPException(status_code=500, detail=response)
-    # Return format that matches frontend expectations (raw.content)
-    return {"content": response}

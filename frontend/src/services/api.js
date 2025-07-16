@@ -13,14 +13,13 @@ export async function submitPromptToClaude(promptText, retries = 3, delay = 1000
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.REACT_APP_CLAUDE_KEY}`,
         },
         body: JSON.stringify({ prompt: promptText }),
       });
 
       if (!response.ok) {
-        // Try to get more detailed error information
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(`Claude API Error: ${response.status} ${errorData.detail || response.statusText}`);
+        throw new Error(`Claude API Error: ${response.status}`);
       }
 
       return await response.json();
