@@ -10,7 +10,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://logivault-ai.vercel.app",
-        "https://logivault-ai-*.vercel.app",
+        "https://logivault-ai-*.vercel.app", 
+        "https://steven-bryants-projects.vercel.app",
+        "https://*.vercel.app",
         "http://localhost:3000",
         "http://127.0.0.1:3000"
     ],

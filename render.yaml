@@ -1,7 +1,14 @@
 services:
   - type: web
-    name: logivault-api
-    env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "uvicorn backend.main:app --host 0.0.0.0 --port 10000"
-    plan: free
+    name: logivault-ai-backend
+    runtime: python3
+    buildCommand: pip install --upgrade pip setuptools wheel && pip install --no-cache-dir -r requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT --workers 1
+    plan: starter
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.0"
+      - key: PIP_DISABLE_PIP_VERSION_CHECK
+        value: "1"
+      - key: PYTHONPATH
+        value: "/opt/render/project/src"

@@ -1,4 +1,5 @@
 {
+  "name": "logivault-ai",
   "version": 2,
   "builds": [
     {
@@ -12,10 +13,10 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "frontend/$1"
+      "dest": "/frontend/$1"
     }
   ],
   "env": {
-    "REACT_APP_API_URL": "https://logivault-api.onrender.com"
+    "REACT_APP_API_URL": "https://logivault-ai-backend.onrender.com"
   }
 }

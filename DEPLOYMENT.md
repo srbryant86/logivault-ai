@@ -1,92 +1,41 @@
-# LogiVault AI Deployment Configuration
+# LogiVault AI Backend Deployment Guide
 
-## Backend Deployment (Render)
+## Render Deployment
 
-The backend is configured to deploy on Render with the following setup:
+### Option 1: Automatic Deployment (Recommended)
+1. Connect your GitHub repository to Render
+2. Create a new Web Service
+3. Use the following settings:
+   - **Name**: logivault-ai-backend
+   - **Runtime**: Python 3
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `uvicorn backend.main:app --host 0.0.0.0 --port $PORT`
+   - **Health Check Path**: `/healthz`
 
-### Environment Variables Required:
-- `CLAUDE_API_KEY`: Your Claude API key from Anthropic
+### Option 2: Manual Deployment
+1. Push your code to GitHub
+2. In Render dashboard, create new Web Service
+3. Connect to your GitHub repository
+4. Configure environment variables:
+   - `CLAUDE_API_KEY`: Your Claude API key
+   - `PYTHON_VERSION`: 3.11.0
 
-### Render Configuration:
-- **Runtime**: Python 3.12
-- **Build Command**: `pip install -r requirements.txt`
-- **Start Command**: `uvicorn backend.main:app --host 0.0.0.0 --port 10000`
-- **Service Type**: Web Service
+### Environment Variables Required
+- `CLAUDE_API_KEY`: Your Anthropic Claude API key
+- `PORT`: Automatically set by Render
 
-### Configuration Files:
-- `render.yaml`: Render service configuration
-- `requirements.txt`: Python dependencies including `fastapi-cors`
-- `.render-python-version`: Python version specification
+### Testing Deployment
+After deployment, test these endpoints:
+- Health check: `https://your-app.onrender.com/healthz`
+- API endpoint: `https://your-app.onrender.com/generate` (POST)
 
-## Frontend Deployment (Vercel)
+## Alternative: Docker Deployment
+If you prefer Docker:
+1. Build: `docker build -t logivault-ai-backend .`
+2. Run: `docker run -p 8000:8000 -e CLAUDE_API_KEY=your_key logivault-ai-backend`
 
-The frontend is configured to deploy on Vercel with the following setup:
-
-### Environment Variables Required:
-- `REACT_APP_API_URL`: Backend API URL (should be set to your Render service URL)
-
-### Vercel Configuration:
-- **Build Command**: `npm run build`
-- **Output Directory**: `build`
-- **Node Version**: Auto-detected from package.json
-
-### Configuration Files:
-- `vercel.json`: Vercel deployment configuration
-- `frontend/.env.local`: Local development environment variables
-
-## Integration Features
-
-### CORS Configuration
-The backend includes CORS middleware that allows requests from:
-- `https://logivault-ai.vercel.app`
-- `https://logivault-ai-*.vercel.app` (for preview deployments)
-- `http://localhost:3000` (local development)
-
-### API Endpoints
-- `/healthz` - Health check endpoint
-- `/generate` - Main endpoint for Claude AI generation (matches frontend expectations)
-- `/claude` - Legacy endpoint (maintained for backward compatibility)
-
-### Response Format
-The `/generate` endpoint returns responses in the format expected by the frontend:
-```json
-{
-  "content": "Generated response text"
-}
-```
-
-### Error Handling
-- Proper HTTP status codes (400 for bad requests, 500 for server errors)
-- Detailed error messages in `detail` field
-- Retry logic in frontend with exponential backoff
-
-## Local Development
-
-### Backend:
-```bash
-cd /home/runner/work/logivault-ai/logivault-ai
-python -m uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-### Frontend:
-```bash
-cd frontend
-npm install
-npm start
-```
-
-### Environment Variables:
-- Copy `.env` to include your `CLAUDE_API_KEY`
-- Frontend will use `REACT_APP_API_URL=http://localhost:8000` for local development
-
-## Deployment URLs
-
-### Production:
-- Frontend: `https://logivault-ai.vercel.app`
-- Backend: `https://logivault-api.onrender.com`
-
-### Integration Test:
-Run the integration test to verify the complete setup:
-```bash
-python /tmp/integration_test.py
-```
+## Troubleshooting
+- Check logs in Render dashboard
+- Ensure all environment variables are set
+- Verify Python version compatibility
+- Test health endpoint first
