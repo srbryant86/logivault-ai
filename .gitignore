@@ -1,3 +1,20 @@
+# 📦 Backend (Python / FastAPI)
+__pycache__/
+*.py[cod]
+*.db
+*.sqlite3
+.env
 *.egg-info
-dist
-build
+*.log
+
+# 🎨 Frontend (React / Vercel)
+node_modules/
+.next/
+build/
+dist/
+
+# 🖥️ Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
