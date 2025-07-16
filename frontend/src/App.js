@@ -23,8 +23,17 @@ function App() {
       const data = await res.json();
       if (data.error) {
         setResponse('Error: ' + data.error);
+      } else if (
+        data &&
+        typeof data === 'object' &&
+        Array.isArray(data.content) &&
+        data.content[0] &&
+        typeof data.content[0] === 'object' &&
+        typeof data.content[0].text === 'string'
+      ) {
+        setResponse(data.content[0].text);
       } else {
-        setResponse(data.content?.[0]?.text || 'No response received');
+        setResponse('No valid response received');
       }
     } catch (error) {
       setResponse('Error: ' + error.message);
