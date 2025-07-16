@@ -1,0 +1,19 @@
+{
+  "monitoring": {
+    "check_interval_minutes": 5,
+    "services_to_monitor": [
+      "https://logivault-ai.vercel.app",
+      "https://logivault-ai-backend.onrender.com/healthz"
+    ]
+  },
+  "healing": {
+    "max_retries": 5,
+    "retry_delay_minutes": 2,
+    "auto_deploy": true
+  },
+  "maintenance": {
+    "daily_check_time": "02:00",
+    "log_rotation_size_mb": 10,
+    "cleanup_old_files": true
+  }
+}
