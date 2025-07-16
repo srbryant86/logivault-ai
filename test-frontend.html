@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LogiVault AI - Simple Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        textarea { width: 100%; height: 100px; margin: 10px 0; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .response { margin-top: 20px; padding: 10px; border: 1px solid #ddd; background: #f9f9f9; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>LogiVault AI - Simple Test</h1>
+        <p>This is a simple test interface for the LogiVault AI backend.</p>
+        
+        <div>
+            <label for="prompt">Enter your prompt:</label>
+            <textarea id="prompt" placeholder="Enter your prompt here..."></textarea>
+        </div>
+        
+        <button onclick="submitPrompt()" id="submitBtn">Submit to Claude</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function submitPrompt() {
+            const prompt = document.getElementById('prompt').value;
+            const submitBtn = document.getElementById('submitBtn');
+            const result = document.getElementById('result');
+            
+            if (!prompt.trim()) {
+                alert('Please enter a prompt');
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            try {
+                const response = await fetch('/claude', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ prompt: prompt })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    result.innerHTML = `<div class="response"><strong>Response:</strong><br>${data.response}</div>`;
+                } else {
+                    result.innerHTML = `<div class="response error"><strong>Error:</strong><br>${data.detail}</div>`;
+                }
+            } catch (error) {
+                result.innerHTML = `<div class="response error"><strong>Network Error:</strong><br>${error.message}</div>`;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit to Claude';
+            }
+        }
+    </script>
+</body>
+</html>

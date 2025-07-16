@@ -4,6 +4,26 @@ import { cleanResponse, formatEditorial } from '../services/optimization';
 import { logSession } from '../services/sessionLogger';
 import ResponseViewer from './ResponseViewer';
 
+// Helper function to validate API response
+function isValidResponse(data) {
+  return (
+    data &&
+    typeof data === 'object' &&
+    ((data.content && typeof data.content === 'string') || 
+     (Array.isArray(data.content) && data.content[0] && typeof data.content[0].text === 'string'))
+  );
+}
+
+// Helper function to extract content from response
+function extractContent(data) {
+  if (typeof data.content === 'string') {
+    return data.content;
+  } else if (Array.isArray(data.content) && data.content[0] && typeof data.content[0].text === 'string') {
+    return data.content[0].text;
+  }
+  return null;
+}
+
 export default function ClaudeEditor() {
   const [prompt, setPrompt] = useState('');
   const [result, setResult] = useState('');
@@ -17,7 +37,18 @@ export default function ClaudeEditor() {
 
     try {
       const raw = await submitPromptToClaude(prompt);
-      const clean = cleanResponse(raw.content);
+      
+      // Validate response structure
+      if (!isValidResponse(raw)) {
+        throw new Error('Invalid response format from Claude API');
+      }
+      
+      const content = extractContent(raw);
+      if (!content) {
+        throw new Error('No valid content received from Claude API');
+      }
+      
+      const clean = cleanResponse(content);
       const formatted = formatEditorial(clean);
       setResult(formatted);
 
