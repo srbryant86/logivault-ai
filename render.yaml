@@ -1,7 +1,13 @@
 services:
-  - type: web
-    name: logivault-api
-    env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "uvicorn backend.main:app --host 0.0.0.0 --port 10000"
-    plan: free
+- buildCommand: pip install -r requirements.txt
+  envVars:
+  - key: CLAUDE_API_KEY
+    sync: false
+  - key: PYTHON_VERSION
+    value: 3.11.0
+  healthCheckPath: /healthz
+  name: logivault-ai-backend
+  plan: free
+  runtime: python
+  startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+  type: web
