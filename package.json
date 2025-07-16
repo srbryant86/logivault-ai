@@ -1,0 +1,18 @@
+{
+  "name": "logivault-ai",
+  "version": "1.0.0",
+  "description": "AI-powered logging and analysis tool",
+  "main": "backend/main.py",
+  "scripts": {
+    "start": "cd backend && uvicorn main:app --host 0.0.0.0 --port 8000",
+    "dev": "cd backend && uvicorn main:app --host 0.0.0.0 --port 8000 --reload",
+    "frontend": "cd frontend && npm start",
+    "build": "cd frontend && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/srbryant86/logivault-ai"
+  },
+  "author": "srbryant86",
+  "license": "MIT"
+}
