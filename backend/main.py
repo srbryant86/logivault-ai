@@ -3,10 +3,15 @@ from fastapi.responses import JSONResponse
 import httpx
 import asyncio
 import time
+import os
 from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.status import HTTP_429_TOO_MANY_REQUESTS
 from collections import defaultdict
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = FastAPI()
 
@@ -49,12 +54,17 @@ async def claude(request: Request):
 
     # === Claude API Call ===
     try:
+        # Get API key from environment variable
+        api_key = os.getenv("CLAUDE_API_KEY")
+        if not api_key:
+            return JSONResponse(content={"error": "Claude API key not configured"}, status_code=500)
+        
         async with httpx.AsyncClient(timeout=15) as client:
             for attempt in range(5):
                 response = await client.post(
                     "https://api.anthropic.com/v1/messages",
                     headers={
-                        "x-api-key": "YOUR_CLAUDE_API_KEY",
+                        "x-api-key": api_key,
                         "anthropic-version": "2023-06-01",
                         "Content-Type": "application/json",
                     },
