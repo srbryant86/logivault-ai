@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from backend.claude_api import call_claude
 from backend.routes.optimization import router as optimization_router
+from backend.routes.certnode_integration import router as certnode_router
 import os
 
 app = FastAPI(title="LogiVault API", version="1.0.0")
@@ -28,6 +29,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(optimization_router)
+app.include_router(certnode_router)
 
 @app.get("/")
 def root():
