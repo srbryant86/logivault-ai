@@ -3,6 +3,9 @@ import os
 import asyncio
 import time
 from datetime import datetime
+from fastapi import APIRouter, Request
+
+router = APIRouter()
 
 # Add OptiRewrite to path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
